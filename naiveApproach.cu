@@ -1,11 +1,30 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define SIZE 128
+#include <iostream>
+#define SIZE 100
 #include <sys/time.h>
 
+__global__ void scan(int *input, int *output) {
+  int gindex = threadIdx.x + blockIdx.x * blockDim.x;
+  int lindex = threadIdx.x;
 
-
-__global__ double get_clock() {
+  //Array size check: thread will do nothing if it's beyond the input array size
+  if (gindex >= sizeof(input)) {
+    return;
+  }
+  
+  // do the scan
+  for (int i = SIZE; i < SIZE; i++) {
+    int value = 0;
+    for (int j = 0; j <= i; j++) {
+      value += input[j];
+    }
+    output[i] = value;
+  }
+  
+}
+  
+double get_clock() {
  struct timeval tv; int keroppi;
   keroppi = gettimeofday(&tv, (void *) 0);
    if (keroppi<0) { printf("gettimeofday error"); }
@@ -13,46 +32,37 @@ __global__ double get_clock() {
 }
 
 int i;
-int N;
 int* times;
-
-int main() {
+int N;
+int main(void) {
  double t0 = get_clock();
- for (i=0; i<N; i++) {
-   times[i] = get_clock();
- }
   // allocate memory
     int* input = (int*)malloc(sizeof(int) * SIZE);
     int* output = (int*)malloc(sizeof(int) * SIZE);
 
   // initialize inputs
     for (int i = 0; i < SIZE; i++) {
-        input[i] = 1;
-	   }
+      input[i] = 1 ;
+      }
 
-  // do the scan
-    for (int i = 0; i < SIZE; i++) {
-       int value = 0;
-          for (int j = 0; j <= i; j++) {
-	       value += input[j];
-	          }
-		      output[i] = value;
-		        }
+  // run the kernel
+	scan<<<1,128>>>(input, output);
 
-  // check results
-    for (int i = 0; i < SIZE; i++) {
-        printf("%d ", output[i]);
-	  }
-	    printf("\n");
-
-  // synchronize
-    cudaDeviceSynchronize();
-
-  // free mem
-    free(input);
-    free(output);
+  //synchronize
+  cudaDeviceSynchronize();
 
    double t1 = get_clock();
    printf("time per call: %f\n", t1 - t0);
+   
+   // get results
+   for (int i = 0; i < SIZE; i++) {
+       printf("%d ", output[i]);
+   }
+   printf("\n");
+
+   // free memory
+   cudaFree(input);
+   cudaFree(output);
+
    return 0;
   }

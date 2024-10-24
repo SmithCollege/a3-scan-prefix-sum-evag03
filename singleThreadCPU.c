@@ -1,11 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define SIZE 128
+#define SIZE 1000
 #include <sys/time.h>
 
-
-
-__global__ double get_clock() {
+double get_clock() {
  struct timeval tv; int keroppi;
   keroppi = gettimeofday(&tv, (void *) 0);
    if (keroppi<0) { printf("gettimeofday error"); }
