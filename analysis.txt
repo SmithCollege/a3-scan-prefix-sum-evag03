@@ -1,0 +1,13 @@
+Big O Analysis:
+
+Our runtime's average performance runs at about O(N^2) as a result of a nested for loop. The outer loop runs through the array N times. The inner loop goes runs through each element in the array N/2 times, from 1 - N. N divided by the nmber of elements gives you order N. When we multiply N and N/2 we get a runtime of O(N^2).
+
+Data Scaling Tests:
+
+Array Size 100 - time per call: 0.000053
+
+Array Size 128 - time per call: 0.000061
+
+Array Size 500 - time per call: 0.000367
+
+Array Size 1000 - time per call: 0.001242

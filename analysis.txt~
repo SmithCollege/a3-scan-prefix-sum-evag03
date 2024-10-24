@@ -1,0 +1,16 @@
+Big O Analysis:
+
+Our runtime's average performance runs at about 0.13 microseconds.
+The inner loop goes from 1 - N
+N divided by numebr of elements gives you order N
+ON * xc
+
+Data Scaling Tests:
+
+Array Size 100 - time per call: 0.112043
+
+Array Size 128 - time per call: 0.127674
+
+Array Size 500 - time per call: 0.137023
+
+Array Size 1000 - time per call: 0.136787
